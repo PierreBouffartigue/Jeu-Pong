@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from tkinter import *
-import time
 
 #Scores#
 score=0
@@ -68,6 +67,7 @@ def jouer():
  
     canvas = Canvas(tk,width = 500, height = 500 , bd=0, bg="grey")
     canvas.pack(padx=10,pady=10)
+    #canvas.create_line(PosX2+100,PosY2+10,PosX2,PosY2,fill="white",dash=(5,10),width=5)#
 
     
  ######## Balle et raquette ##################
