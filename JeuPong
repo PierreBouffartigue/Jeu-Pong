@@ -1,0 +1,134 @@
+#!/usr/bin/python3
+
+from tkinter import *
+
+PosX=60
+PosY=10
+PosX2=490
+PosY2=200
+dx=1
+dy=1
+score=0
+
+
+    
+##########Bouton quitter##########
+def fin ():
+    canvas.quit()
+    canvas.destroy()
+#########Bouton jouer#########
+def jouer():
+    global canvas
+ 
+#########Déplacements de la balle ############"
+    def deplacement():
+        global dx, dy, PosX2, PosY2, score
+        if canvas.coords(balle)[1]<0:
+            dy=-1*dy
+        if canvas.coords(balle)[2]>500:
+            dx=-1*dx
+            score=score+1
+            TextGame.set("Score : "+ str(score))
+        if canvas.coords(balle)[0]<0:
+            dx=-1*dx
+            score=score+1
+            TextGame.set("Score : "+ str(score))
+        if canvas.coords(balle)[3]>500:
+            dy=-1*dy
+        if canvas.coords(balle)[3]<540:
+            tk.after(10,deplacement)
+        canvas.move(balle,dx,dy)
+        
+######Touches du clavier###########
+    def KeyBoard(event):
+        global PosY2, canvas
+        Key = event.keysym
+ 
+        if Key == 'Right':
+            canvas.move(raquette,30,0)
+        if Key == 'Left':
+            canvas.move(raquette,-30,0)
+ 
+###### Nouveau canevas et destruction du lanceur######
+    canvas.destroy()
+    tk = Tk()
+    tk.title("[Pong]")
+ 
+    canvas = Canvas(tk,width = 500, height = 500 , bd=0, bg="grey")
+    canvas.pack(padx=10,pady=10)
+ ######## Balle et raquette ##################
+    balle = canvas.create_oval(PosX,PosY,PosX+20,PosY+20,fill='orange')
+    raquette = canvas.create_rectangle(PosX2+10,PosY2+100,PosX2,PosY2,fill='black')
+ ###########Scoreboard###################
+    TextGame = StringVar()
+    LabelGame = Label(tk, textvariable = TextGame , bg ="grey")
+    TextGame.set("Score : "+ str(score))
+    LabelGame.pack(padx = 15, pady = 5)
+ 
+ ################ Refraichissement en boucle ##################
+ 
+    canvas.after(55,deplacement)
+    canvas.focus_set()
+    canvas.bind('<Key>',KeyBoard)
+    deplacement()
+    tk.mainloop()
+    
+##########Bouton credits###########
+def credits ():
+	global canvas
+	
+	canvas.destroy()
+	crd = Tk()
+	crd.title("[Crédits]")
+	TextCredit=Label(crd,text="Jeu Pong par\n Pierre Bouffartigue\n Année 2018 - 2019\n", fg="orange",bg="black").pack()
+	BoutonRetour=Button(crd,text="Retour au menu", command=rtm).pack()
+
+#########Bouton instructions########"
+def instructions ():
+	global canvas
+	
+	canvas.destroy()
+	inst = Tk()
+	inst['bg'] = 'black'
+	inst.title("[Instructions]")
+	TextCredit=Label(inst,text="-[PONG]-", fg="red",bg="black").pack()
+	TextCredit=Label(inst,text="Ce jeu reprend le principe du tennis de table.\n A deux joueurs vous devrez vous renvoyer \nla balle et marquer un maximum de points.\n Si un joueur ne renvoie pas la balle\n et qu'elle touche le bord derrière sa raquette,\n un point sera marqué.\n", fg="orange",bg="black").pack()
+	TextCredit=Label(inst,text="Joueur 1 (gauche), utilise les touches Z et S\n Joueur 2 (droite), utilise les touches P et M\n", fg="green",bg="black").pack()
+	BoutonRetour=Button(inst,text="Retour au menu", command=rtm).pack()
+
+
+
+
+###########Canvas principal (menu) #################
+canvas = Tk()
+canvas.geometry("170x230")
+canvas.title("-Pong-")
+    
+###########Boutons et texte du menu de lancement#################
+
+TextIndication=Label(canvas,text="Avant de débuter une\n partie assurez vous\n  d'avoir pris connaissance\n  des instructions \n disponibles ci-dessous.", fg="black").pack()
+
+BoutonInstructions=Button(canvas,text="Instructions", command=instructions).pack()
+BoutonJouer = Button(canvas, text ="   Jouer   ", command = jouer, bg ="blue", fg="white").pack()
+BoutonOptions=Button(canvas,text="Options", command=fin).pack()
+BoutonCredits=Button(canvas,text="Credits", command=credits).pack()
+BoutonQuit=Button(canvas,text="Quitter", command=fin, fg="red").pack()
+TextPlus=Label(canvas,text="Jeu Pong - 2019").pack()
+
+##########Bouton "retour" au menu#####
+def rtm ():  
+	canvas = Tk()
+	canvas.geometry("170x230")
+	canvas.title("-Pong-")
+	TextIndication=Label(canvas,text="Avant de débuter une\n partie assurez vous\n  d'avoir pris connaissance\n  des instructions \n disponibles ci-dessous.", fg="black").pack()
+
+	BoutonInstructions=Button(canvas,text="Instructions", command=instructions).pack()
+	BoutonJouer = Button(canvas, text ="   Jouer   ", command = jouer, bg ="blue", fg="white").pack()
+	BoutonOptions=Button(canvas,text="Options", command=fin).pack()
+	BoutonCredits=Button(canvas,text="Credits", command=credits).pack()
+	BoutonQuit=Button(canvas,text="Quitter", command=fin, fg="red").pack()
+	TextPlus=Label(canvas,text="Jeu Pong - 2019").pack()
+
+#########Boucle infinie pour que le jeu ne se termine qu'en fin de partie########
+
+canvas.mainloop()
